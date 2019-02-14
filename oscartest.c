@@ -10,12 +10,11 @@
 const double epsilon = 0.001;
 
 
-inline double computex(double x1, double x2, double constant) {
-    return (x1 - x2) * constant;
-    
+// Functions calculateing forces
+double computex(double x1, double x2, double constant) {
+    return (x1 - x2) * constant;   
 }
-
-inline double computey(double y1, double y2, double constant) {
+double computey(double y1, double y2, double constant) {
     return (y1-y2) * constant;
 }
 
@@ -41,26 +40,23 @@ int main(int argc, char* argv[]) {
     double *brightness = malloc(N*sizeof(double));
 
     // Read file
-    
     FILE * fp = fopen(filename, "r");
-
     for(int i = 0; i < N; i++)
     {
-
-        
         fread(&(position[2*i]), sizeof(double), 1, fp);
         fread(&(position[2*i+1]), sizeof(double), 1, fp);
         fread(&(mass[i]), sizeof(double), 1, fp);
         fread(&(velocity[2*i]), sizeof(double), 1, fp);
         fread(&(velocity[2*i+1]), sizeof(double), 1, fp);
         fread(&(brightness[i]), sizeof(double), 1, fp);
-        
-
     }
     fclose(fp);
-    int t=0;
-    const double G = (double) 100/N;
 
+    
+    int t=0;
+    double G = (double)100/N;
+
+    // Loop with graphics
     if(graphics==1) {
         InitializeGraphics(argv[0], 800, 800);
         SetCAxes(0,1);
@@ -69,7 +65,8 @@ int main(int argc, char* argv[]) {
         
         while (t <= nsteps) {
             ClearScreen();
-            //double *force = malloc(2*N*sizeof(double));
+
+            // For loop iterating over particle n(n+1)/2 times and calculates the forces between them
             for (int i = 0; i < N; i++) {
                 int p = 2*i;
                 DrawCircle(position[2*i], position[2*i+1], W, L, 0.01, 0);
@@ -78,24 +75,19 @@ int main(int argc, char* argv[]) {
                     (sqrt((position[p]-position[2*j])*(position[p]-position[2*j]) + (position[p+1]-position[2*j+1])*(position[p+1]-position[2*j+1])) + epsilon) * 
                     (sqrt((position[p]-position[2*j])*(position[p]-position[2*j]) + (position[p+1]-position[2*j+1])*(position[p+1]-position[2*j+1])) + epsilon) *
                     (sqrt((position[p]-position[2*j])*(position[p]-position[2*j]) + (position[p+1]-position[2*j+1])*(position[p+1]-position[2*j+1])) + epsilon));
-                    //printf("Constat = %lf\n", constant); 
+ 
                     force[2*i] += computex(position[2*i], position[2*j], constant); 
                     force[2*j] -= force[2*i];
                     force[2*i+1] += computey(position[2*i+1], position[2*j+1], constant);
                     force[2*j+1] -= force[2*i+1];
                 }
 
-                //printf("particle: %d x-force =%lf \n",i,  force[2*i]);
-                //printf("particle: %d y-force =%lf \n",i , force[2*i+1]);
-            
+                // Update velocity and position
                 velocity[2*i] += delta_t*force[2*i]/mass[i];
                 position[2*i] += delta_t*velocity[2*i];
 
                 velocity[2*i+1] += delta_t*force[2*i+1]/mass[i];
                 position[2*i+1] += delta_t*velocity[2*i+1];
-
-                //printf("particle: %d x-pos =%lf \n",i,  position[2*i]);
-                //printf("particle: %d y-pos =%lf \n",i , position[2*i+1]);
 
                 force[2*i] = 0;
                 force[2*i+1] = 0;
@@ -113,9 +105,7 @@ int main(int argc, char* argv[]) {
 
        while (t <= nsteps) {
 
-           //printf("===== %d ===== \n", t);
-            //force = (double *)malloc(2*N*sizeof(double));
-            //printf("Force after malloc %lf \n", force[3]);
+            // For loop iterating over particle n(n+1)/2 times and calculates the forces between them
             for (int i = 0; i < N; i++) {
                 int p = 2*i;
                 for(int j = i+1; j < N; j++) {
@@ -130,10 +120,7 @@ int main(int argc, char* argv[]) {
 
                 }
 
-                //printf("particle: %d x-force =%lf \n",i,  force[2*i]);
-                //printf("particle: %d y-force =%lf \n",i , force[2*i+1]);
-
-            
+                // Update velocity and posiotion
                 velocity[p] += delta_t*force[p]/mass[i];
                 position[p] += delta_t*velocity[p];
 
@@ -142,13 +129,7 @@ int main(int argc, char* argv[]) {
 
                 force[p] = 0;
                 force[p] = 0;
-
-
             }
-
-            //free(temp);
-            //printf("Force after free %lf \n", force[3]);
-            
         t++;
         } 
     }
@@ -168,7 +149,6 @@ int main(int argc, char* argv[]) {
         fwrite(&(velocity[2*i]), sizeof(double), 1, pw);
         fwrite(&(velocity[2*i+1]), sizeof(double), 1, pw);
         fwrite(&(brightness[i]), sizeof(double), 1, pw);
-
     }
     
     fclose(pw);

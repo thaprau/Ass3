@@ -173,7 +173,7 @@ void InitializeGraphics(char *command, int windowWidth, int windowHeight) {
   XMaskEvent(global_display_ptr, ExposureMask, &report);
 }
 
-void SetCAxes(float cmin, float cmax) {
+void  SetCAxes(float cmin, float cmax) {
   caxis[0]=cmin;
   caxis[1]=cmax;
 }

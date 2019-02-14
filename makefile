@@ -1,7 +1,7 @@
 jtest: johantest.c
 	gcc -O3 johantest.c graphics/graphics.c graphics/graphics.h -o johantest -lpthread -lm -lX11
 otest: oscartest.c
-	gcc oscartest.c graphics/graphics.c graphics/graphics.h -o oscartest -pthread -lm -lX11
+	gcc -O3 oscartest.c graphics/graphics.c graphics/graphics.h -o oscartest -pthread -lm -lX11
 test: test.c
 	gcc -O3 test.c graphics/graphics.c graphics/graphics.h -o test -lpthread -lm -lX11
 run: 
